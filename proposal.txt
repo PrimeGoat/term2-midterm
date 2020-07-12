@@ -1,0 +1,24 @@
+Hello, I am NOVA.  I will be Denis' midterm project.  I am a web-based AI-powered interactive chat bot that utilizes voice recognition, speech synthesis, and natural language processing.  My functionality will be similar to that of Amazon Alexa.
+
+Routes:
+- index
+- register
+- /api/v1/adduser
+- /api/v1/userinfo
+- /api/v1/updateuser
+- login
+- you must be logged in
+- /api/v1/update password (you must update your password before you can log in)
+- chatbot
+- about: neural networks
+- about: ai
+- bot usage stats
+
+GET:	user info, bot stats
+POST:	user info, password, bot stats
+PUT:	user info, password, bot stats
+DELETE:	user, bot stats
+
+Models:
+- User: User's info, associated with a bot stats entry
+- Botstats: Bot usage stats, associated with a user
