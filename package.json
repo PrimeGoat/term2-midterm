@@ -1,14 +1,18 @@
 {
-  "name": "web-speech-ai",
+  "name": "term2-midterm",
   "version": "1.0.0",
-  "description": "Simple AI Chat Bot Demo with Web Speech API",
+  "description": "Web-based AI-powered chat bot with speech.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js"
   },
-  "author": "Tomomi Imura",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrimeGoat/term2-midterm.git"
+  },
+  "author": "Denis Savgir",
+  "license": "ISC",
   "dependencies": {
     "@google-cloud/dialogflow": "^3.1.0",
     "@google-cloud/text-to-speech": "^3.0.1",
@@ -18,9 +22,14 @@
     "dotenv": "^4.0.0",
     "ejs": "^2.5.6",
     "express": "^4.17.1",
+    "nodemon": "^2.0.4",
     "socket.io": "^2.3.0",
     "socketio": "^1.0.0",
     "text-to-speech": "^1.0.9",
     "uuid": "^8.2.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/PrimeGoat/term2-midterm/issues"
+  },
+  "homepage": "https://github.com/PrimeGoat/term2-midterm#readme"
 }
