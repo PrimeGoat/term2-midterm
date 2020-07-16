@@ -38,56 +38,41 @@ async function runSample(input, projectId = 'development-283417') {
 
     // Send request and log result
     const responses = await sessionClient.detectIntent(request);
-    //console.log('Detected intent');
     const result = responses[0].queryResult;
-    //console.log(`  Query: ${result.queryText}`);
-	//console.log(`  Response: ${result.fulfillmentText}`);
-    if (result.intent) {
-        //console.log(`  Intent: ${result.intent.displayName}`);
-    } else {
-        //console.log(`  No intent matched.`);
-	}
-	if(result.allRequiredParamsPresent) {
-		console.log("All params filled, submitting command", result.action);
-		parseCommand(result.action, result.parameters, result.intent);
-	}
-	console.log("object: ", JSON.stringify(result));
-	return result.fulfillmentText;
+	return result;
 }
-
-console.log("EH");
 
 // Handle incoming speech
 const inputText = async function(text, socket) {
-	console.log("Start")
-	let response = await runSample(text);
-	console.log("got Response", response)
+	let result = await runSample(text);
+
+	let output;
+	if(result.allRequiredParamsPresent) {
+		output = await parseCommand(result.action, result.parameters, result.intent, socket);
+	}
+
+	let response = output || result.fulfillmentText;
+
 	let audio = await textToAudioBuffer(response);  // Turn text into speech
-	console.log("got audio")
 
 	socket.emit('bot reply', response);
 	socket.emit('bot audio', audio);
 }
 
-const parseCommand = function(command, parameters, intent) {
+const parseCommand = async function(command, parameters, intent, socket) {
 	for(entry of cmd) {
 		if(command.toLowerCase() == entry.command.toLowerCase()) {
 			try {
-				retVal = entry.callback(command, parameters, intent);
+				retVal = await entry.callback(command, parameters, intent, socket);
 			} catch(err) {
-				logger.error(`Bot Command "${command}" had error:`, err);
+				console.error(`Bot Command "${command}" had error:`, err);
 			}
-			//console.log(command, args);
-			if(typeof(err) == "undefined" && typeof(retVal) != "undefined" && retVal) {
-				// if(retVal[1] != undefined) {
-				// 	let levels = ["error", "warn", "info", "http", "verbose", "debug", "silly"]
-				// 	let levelCall = levels[retVal[1]]
-
-				// }
+			if(typeof(err) == "undefined" && typeof(retVal) != "undefined" && retVal != "") {
+				return retVal;
 			}
-			break;
 		}
 	}
+	return null;
 }
 
 // Bot command handler
@@ -103,7 +88,6 @@ const addCmd = function(command, callback) {
 addCmd("getWeather", getWeather.command);
 
 async function textToAudioBuffer(text) {
-	console.log("TTS: ", text);
 	requestTTS.input = { text: text }; // text or SSML
 	// Performs the Text-to-Speech request
 	const response = await ttsClient.synthesizeSpeech(requestTTS);

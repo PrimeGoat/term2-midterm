@@ -56,6 +56,10 @@ socket.on('bot audio', function(data) {
 	playOutput(data);
 });
 
+socket.on('content', function(data) {
+	document.getElementById('output').innerHTML = data;
+});
+
 function playOutput(arrayBuffer){
 	let audioContext = new AudioContext();
 	let outputSource;
