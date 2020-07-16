@@ -32,7 +32,7 @@ const command = async function(command, parameters, intent, socket) {
 	try {
 		result = await axios.get(url);
 	} catch(err) {
-		return "Couldn't look up the weather";
+		return "Couldn't look up the weather.";
 	}
 
 	result = result.data;
@@ -110,7 +110,7 @@ const command = async function(command, parameters, intent, socket) {
 	socket.emit("content", content.replace(/\n/g, '<br>'));
 	// "The Weather forecast: " + moment.unix(result.data.daily[0].dt).format('dddd, MMM D')
 
-	return content;
+	return "Your weather forecast is available in the output area.";
 }
 
 
