@@ -1,6 +1,7 @@
 const dialogflow = require('dialogflow');
 const uuid = require('uuid');
 const textToSpeech = require('@google-cloud/text-to-speech');
+const getWeather = require('./getWeather');
 
 /**
  * Send a query to the dialogflow agent, and return the query result.
@@ -99,11 +100,7 @@ const addCmd = function(command, callback) {
 	});
 }
 
-const getWeather = function(command, parameters, intent) {
-
-	console.log("Weather Forecast", command, parameters, intent);
-}
-addCmd("getWeather", getWeather);
+addCmd("getWeather", getWeather.command);
 
 async function textToAudioBuffer(text) {
 	console.log("TTS: ", text);

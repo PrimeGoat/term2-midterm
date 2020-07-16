@@ -17,6 +17,7 @@
     "@google-cloud/dialogflow": "^3.1.0",
     "@google-cloud/text-to-speech": "^3.0.1",
     "apiai": "^4.0.3",
+    "axios": "^0.19.2",
     "cors": "^2.8.5",
     "dialogflow": "^1.2.0",
     "dotenv": "^4.0.0",
