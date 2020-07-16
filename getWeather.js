@@ -15,16 +15,17 @@ const command = async function(command, parameters, intent, socket) {
 	if(isNaN(zipcode) || zipcode.length != 5) return "Invalid zip code."
 
 	const zipUrl = `https://www.zipcodeapi.com/rest/${zcApiKey}/info.json/${zipcode}/degrees`;
-	let lat, long;
+	let lat, long, cityState;
 	try {
-		const coords = await axios.get(zipUrl);
+		coords = await axios.get(zipUrl);
 		lat = coords.data.lat;
 		long = coords.data.lng;
+		cityState = `${coords.data.city}, ${coords.data.state}`;
 	} catch(err) {
 		return "Invalid Zipcode";
 	}
 
-	if(lat == undefined || long == undefined)	return "Cannot look up zipcode";
+	if(lat == undefined || long == undefined) return "Cannot look up zipcode";
 
 	const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely&units=imperial&appid=${owApiKey}`;
 
@@ -76,16 +77,12 @@ const command = async function(command, parameters, intent, socket) {
 			content = `Hourly forecast: \n` + hours.join(",\n");
 			break;
 		case "daily":
-			let days = [...result.daily];
-			checkDay = moment(datetime).format('YYYY DDD');
-			console.log("Checking for day", checkDay);
-			for(day of days) {
-				let date = moment.unix(day.dt).format('YYYY DDD');
-				if(checkDay == date) {
-					content = `Daily forecast for ${moment(datetime).format('dddd, MMM D')}: ${day.weather[0].description} with a high of ${Math.round(day.temp.max)} and a low of ${Math.round(day.temp.min)}`;
-					break;
-				}
-			}
+			//console.log("Result", result);
+			console.log("checkday", moment(datetime).format('YYYY DDD'));
+			let day = getDay(datetime, result);
+
+			content = `Daily forecast for ${moment(datetime).format('dddd, MMM D')}: ${day.weather[0].description} with a high of ${Math.round(day.temp.max)} and a low of ${Math.round(day.temp.min)}`;
+
 			break;
 		case "weekly": case "7day":
 			checkDay = moment(datetime).format('YYYY DDD');
@@ -107,13 +104,46 @@ const command = async function(command, parameters, intent, socket) {
 	if(content == "" || content == undefined) content = "No weather forecast available.";
 
 	console.log(content);
-	socket.emit("content", content.replace(/\n/g, '<br>'));
+	let html = displayForecast(datetime, cityState, type, result);
+	//let html = content.replace(/\n/g, '<br>');
+	socket.emit("content", html);
 	// "The Weather forecast: " + moment.unix(result.data.daily[0].dt).format('dddd, MMM D')
 
-	return "Your weather forecast is available in the output area.";
+	return content; // "Your weather forecast is available in the output area.";
 }
 
+const displayForecast = function(timestamp, cityState, type, result) {
+	let output = '';
 
+	switch(type) {
+		case 'hourly':
+			break;
+		case 'daily':
+			let day = getDay(timestamp, result);
+			output += `<div class="dayWeather"><b>${cityState}</b><br>${moment(timestamp).format('dddd, MMM D')}<br>`;
+			output += `<img src="${iconUrl(day.weather[0].icon)}" width="100px" height="100px"><br>`;
+			output += `<span class="temperature">${Math.round(day.temp.day)}&deg;</span><br><span class="weatherDesc">${day.weather[0].description}</b></span><br>High: ${Math.round(day.temp.max)}<br>Low: ${Math.round(day.temp.min)}</div>`;
+			break;
+		case "weekly": case "7day":
+			break;
+	}
+
+	return output;
+}
+
+const getDay = function(date, result) {
+	checkDay = moment(date).format('YYYY DDD');
+
+	for(day of result.daily) {
+		if(checkDay == moment.unix(day.dt).format('YYYY DDD')) {
+			return day;
+		}
+	}
+}
+
+const iconUrl = function(name) {
+	return `https://openweathermap.org/img/wn/${name}@2x.png`
+}
 
 module.exports = {
 	command: command

@@ -1,3 +1,61 @@
+html, body {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	background-color: #bce7be;
+	background-image: url('/images/main-background.png');
+}
+
+.header {
+	/*position: absolute;*/
+	width: 100%;
+	height: 200px;
+	left: 0px;
+	top: 0px;
+	background-color: chartreuse;
+	background-image: url('/images/header.png'), url('/images/header-background.png');
+	background-repeat: no-repeat, repeat-x;
+	display: block;
+	margin-bottom: 10px;
+}
+
+.left {
+	width: 400px;
+}
+
+.main {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	width: 90%;
+	margin: auto;
+	padding-bottom: 30px;
+}
+
+.talkBox {
+	overflow-wrap: break-word;
+	hyphens: auto;
+	width: 400px;
+}
+
+.container {
+	position: relative;
+	min-height: 100vh;
+	/*min-height: calc(100vh - 20px);*/
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 20px;
+	background-color: black;
+	margin-top: 5px;
+	display: block;
+}
+
 button {
   display: block;
   width: 200px;
@@ -5,7 +63,7 @@ button {
   border: 0;
   border-radius: 50%;
   padding: .7em 1em;
-  margin: 4em auto 3em;
+  margin: 4em 0 3em;
   text-align: center;
   color: #fff;
   background-image: url('/images/mic.png');
@@ -15,13 +73,6 @@ button {
 
   will-change: transform, filter;
   transition: all 0.3s ease-out;
-}
-
-button .fa {
-  font-size: 130px;
-  line-height: 200px;
-  margin: 0;
-  text-shadow: 1px 2px 2px #2a8b90;
 }
 button:hover {
   transform: scale(.92);
@@ -33,14 +84,33 @@ button:focus {
   outline: 0;
 }
 
-.mic {
-
-}
-
 #output {
 	width: 800px;
 	height: 600px;
-	background-color: #2a8b99;
-	margin: 0 auto;
+	background-color: rgba(0, 191, 0, 0.25);
 	overflow: auto;
+	font-size: larger;
+	box-sizing: border-box;
+	padding: 20px;
+}
+
+/* WEATHER */
+.dayWeather {
+	align-content: center;
+	align-items: center;
+	width: 175px;
+	height: 400px;
+	margin: auto;
+	text-align: center;
+	background-color: gray;
+	text-transform: capitalize;
+}
+
+.temperature {
+	font-size: 100px;
+	font-weight: bold;
+	padding-left: 15px;
+}
+.weatherDesc {
+	font-size: xx-large;
 }
