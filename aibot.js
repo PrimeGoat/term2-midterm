@@ -46,12 +46,17 @@ async function runSample(input, projectId = 'development-283417') {
     } else {
         //console.log(`  No intent matched.`);
 	}
-	console.log("object: ", JSON.stringify(result.fulfillmentText));
+	if(result.allRequiredParamsPresent) {
+		console.log("All params filled, submitting command", result.action);
+		parseCommand(result.action, result.parameters, result.intent);
+	}
+	console.log("object: ", JSON.stringify(result));
 	return result.fulfillmentText;
 }
 
 console.log("EH");
 
+// Handle incoming speech
 const inputText = async function(text, socket) {
 	console.log("Start")
 	let response = await runSample(text);
@@ -62,6 +67,43 @@ const inputText = async function(text, socket) {
 	socket.emit('bot reply', response);
 	socket.emit('bot audio', audio);
 }
+
+const parseCommand = function(command, parameters, intent) {
+	for(entry of cmd) {
+		if(command.toLowerCase() == entry.command.toLowerCase()) {
+			try {
+				retVal = entry.callback(command, parameters, intent);
+			} catch(err) {
+				logger.error(`Bot Command "${command}" had error:`, err);
+			}
+			//console.log(command, args);
+			if(typeof(err) == "undefined" && typeof(retVal) != "undefined" && retVal) {
+				// if(retVal[1] != undefined) {
+				// 	let levels = ["error", "warn", "info", "http", "verbose", "debug", "silly"]
+				// 	let levelCall = levels[retVal[1]]
+
+				// }
+			}
+			break;
+		}
+	}
+}
+
+// Bot command handler
+const cmd = [];
+
+const addCmd = function(command, callback) {
+	cmd.push({
+		command: command,
+		callback: callback
+	});
+}
+
+const getWeather = function(command, parameters, intent) {
+
+	console.log("Weather Forecast", command, parameters, intent);
+}
+addCmd("getWeather", getWeather);
 
 async function textToAudioBuffer(text) {
 	console.log("TTS: ", text);
