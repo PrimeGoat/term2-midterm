@@ -56,7 +56,7 @@ const inputText = async function(text, socket) {
 	console.log("Start")
 	let response = await runSample(text);
 	console.log("got Response", response)
-	let audio = await textToAudioBuffer(response);
+	let audio = await textToAudioBuffer(response);  // Turn text into speech
 	console.log("got audio")
 
 	socket.emit('bot reply', response);
@@ -90,7 +90,7 @@ function setupTTS() {
 		voice: {
 			languageCode: 'en-US', //https://www.rfc-editor.org/rfc/bcp/bcp47.txt
 			ssmlGender: 'FEMALE',  //  'MALE|FEMALE|NEUTRAL'
-			name: 'en-US-Wavenet-F'
+			name: 'en-US-Wavenet-F' // That's the voice I chose.  There were many choices, including English in an Indian accent
 		},
 		// Select the type of audio encoding
 		audioConfig: {
