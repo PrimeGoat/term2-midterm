@@ -92,6 +92,7 @@ const command = async function(command, parameters, intent, socket) {
 				week.push(`${(i == 0) ? date.format('dddd, MMM D') : date.format('dddd')}: ${days[i].weather[0].description} with a high of ${Math.round(days[i].temp.max)} and a low of ${Math.round(days[i].temp.min)}`);
 			}
 			content = `Weekly forecast: \n` + week.join(".\n");
+			content = "Your weekly forecast is available in the output area.";
 			break;
 	}
 
@@ -113,10 +114,10 @@ const displayForecast = function(timestamp, cityState, type, result) {
 			break;
 		case 'daily':
 			let day = getDay(timestamp, result);
-			output += `<div class="dayWeather"><b>${cityState}</b><br>${moment(timestamp).format('dddd, MMM D')}<br>`;
+			output += `<center><div class="dayWeather"><b>${cityState}</b><br>${moment(timestamp).format('dddd, MMM D')}<br>`;
 			output += `<img src="${iconUrl(day.weather[0].icon)}" width="100px" height="100px"><br>`;
 			output += `<span class="temperature">${Math.round(day.temp.day)}&deg;</span><br><span class="weatherDesc">${day.weather[0].description}`
-			output += `</span><br>High: ${Math.round(day.temp.max)}<br>Low: ${Math.round(day.temp.min)}</div>`;
+			output += `</span><br>High: ${Math.round(day.temp.max)}<br>Low: ${Math.round(day.temp.min)}</div></center>`;
 			break;
 		case "weekly": case "7day":
 			let days = getDay(timestamp, result, 7);

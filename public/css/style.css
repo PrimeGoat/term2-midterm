@@ -94,6 +94,7 @@ button:focus {
 	box-sizing: border-box;
 	padding: 0px;
 	text-align: center;
+	margin: auto;
 }
 
 /* WEATHER */
@@ -104,7 +105,7 @@ button:focus {
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: stretch;
-	align-content: flex-start;
+	align-content: stretch;
 	object-fit: scale-down;
 	margin: 0px;
 	width: 750px;
@@ -123,11 +124,10 @@ button:focus {
 .dayWeather {
 	position: relative;
 	width: 175px;
-	/*margin: auto;*/
+	margin: 5px;
 	text-align: center;
 	background-color: lightgray;
 	text-transform: capitalize;
-	margin: 5px;
 }
 
 .temperature {
@@ -139,5 +139,8 @@ button:focus {
 }
 
 .weatherDesc {
+	display: inline-block;
 	font-size: xx-large;
+	height: 2em;
+	padding-bottom: 5px;
 }
