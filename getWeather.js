@@ -82,28 +82,21 @@ const command = async function(command, parameters, intent, socket) {
 			let day = getDay(datetime, result);
 
 			content = `Daily forecast for ${moment(datetime).format('dddd, MMM D')}: ${day.weather[0].description} with a high of ${Math.round(day.temp.max)} and a low of ${Math.round(day.temp.min)}`;
-
 			break;
 		case "weekly": case "7day":
 			checkDay = moment(datetime).format('YYYY DDD');
-			let week = [], moreDays = 0;
+			let week = [], moreDays = 0, days = getDay(datetime, result, 7);
 
-			for(day of result.daily) {
-				let date = moment.unix(day.dt);
-				if(checkDay == date.format('YYYY DDD')) {
-					moreDays = 7;
-				}
-				if(moreDays-- > 0) {
-					week.push(`${date.format('dddd, MMM D')}: ${day.weather[0].description} with a high of ${Math.round(day.temp.max)} and a low of ${Math.round(day.temp.min)}`);
-				}
+			for(let i = 0; i < days.length; i++) {
+				let date = moment.unix(days[i].dt);
+				week.push(`${(i == 0) ? date.format('dddd, MMM D') : date.format('dddd')}: ${days[i].weather[0].description} with a high of ${Math.round(days[i].temp.max)} and a low of ${Math.round(days[i].temp.min)}`);
 			}
-			content = `Weekly forecast: \n` + week.join(",\n");
+			content = `Weekly forecast: \n` + week.join(".\n");
 			break;
 	}
 
 	if(content == "" || content == undefined) content = "No weather forecast available.";
 
-	console.log(content);
 	let html = displayForecast(datetime, cityState, type, result);
 	//let html = content.replace(/\n/g, '<br>');
 	socket.emit("content", html);
@@ -122,23 +115,38 @@ const displayForecast = function(timestamp, cityState, type, result) {
 			let day = getDay(timestamp, result);
 			output += `<div class="dayWeather"><b>${cityState}</b><br>${moment(timestamp).format('dddd, MMM D')}<br>`;
 			output += `<img src="${iconUrl(day.weather[0].icon)}" width="100px" height="100px"><br>`;
-			output += `<span class="temperature">${Math.round(day.temp.day)}&deg;</span><br><span class="weatherDesc">${day.weather[0].description}</b></span><br>High: ${Math.round(day.temp.max)}<br>Low: ${Math.round(day.temp.min)}</div>`;
+			output += `<span class="temperature">${Math.round(day.temp.day)}&deg;</span><br><span class="weatherDesc">${day.weather[0].description}`
+			output += `</span><br>High: ${Math.round(day.temp.max)}<br>Low: ${Math.round(day.temp.min)}</div>`;
 			break;
 		case "weekly": case "7day":
+			let days = getDay(timestamp, result, 7);
+			output += `<div class="weekWeather"><p class="weekCity"><b>${cityState}</b></p>`
+			for(let day of days) {
+				output += `<div class="dayWeather">${moment.unix(day.dt).format('dddd, MMM D')}<br>`;
+				output += `<img src="${iconUrl(day.weather[0].icon)}" width="100px" height="100px"><br>`;
+				output += `<span class="temperature">${Math.round(day.temp.day)}&deg;</span><br><span class="weatherDesc">${day.weather[0].description}`
+				output += `</span><br>High: ${Math.round(day.temp.max)}<br>Low: ${Math.round(day.temp.min)}</div>`;
+			}
+			output += `</div>`;
 			break;
 	}
 
 	return output;
 }
 
-const getDay = function(date, result) {
+const getDay = function(date, result, consecutive = 1) {
 	checkDay = moment(date).format('YYYY DDD');
+	let days = [], moreDays = 0;
 
 	for(day of result.daily) {
 		if(checkDay == moment.unix(day.dt).format('YYYY DDD')) {
-			return day;
+			if(consecutive == 1) return day;
+			moreDays = consecutive;
 		}
+		if(moreDays-- > 0) days.push(day);
 	}
+
+	return days;
 }
 
 const iconUrl = function(name) {

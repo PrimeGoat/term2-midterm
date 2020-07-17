@@ -51,7 +51,7 @@ const inputText = async function(text, socket) {
 		output = await parseCommand(result.action, result.parameters, result.intent, socket);
 	}
 
-	let response = output || result.fulfillmentText;
+	let response = (output != undefined) ? output : result.fulfillmentText;
 
 	let audio = await textToAudioBuffer(response);  // Turn text into speech
 
@@ -86,6 +86,12 @@ const addCmd = function(command, callback) {
 }
 
 addCmd("getWeather", getWeather.command);
+
+const clearOutput = function(command, parameters, intent, socket) {
+	socket.emit("content", "");
+}
+addCmd("clearOutput", clearOutput);
+
 
 async function textToAudioBuffer(text) {
 	requestTTS.input = { text: text }; // text or SSML

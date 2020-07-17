@@ -85,32 +85,59 @@ button:focus {
 }
 
 #output {
+	position: relative;
 	width: 800px;
 	height: 600px;
 	background-color: rgba(0, 191, 0, 0.25);
-	overflow: auto;
+	overflow: hidden;
 	font-size: larger;
 	box-sizing: border-box;
-	padding: 20px;
+	padding: 0px;
+	text-align: center;
 }
 
 /* WEATHER */
+.weekWeather {
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: stretch;
+	align-content: flex-start;
+	object-fit: scale-down;
+	margin: 0px;
+	width: 750px;
+	height: 550px;
+	transform: scale(0.75, 0.75);
+	top: 0px;
+	left: 0px;
+}
+
+.weekCity {
+	position: absolute;
+	top: -40px;
+	left: 0px;
+}
+
 .dayWeather {
-	align-content: center;
-	align-items: center;
+	position: relative;
 	width: 175px;
-	height: 400px;
-	margin: auto;
+	/*margin: auto;*/
 	text-align: center;
-	background-color: gray;
+	background-color: lightgray;
 	text-transform: capitalize;
+	margin: 5px;
 }
 
 .temperature {
 	font-size: 100px;
 	font-weight: bold;
 	padding-left: 15px;
+	line-height: 80px;
+	height: 80px;
 }
+
 .weatherDesc {
 	font-size: xx-large;
 }

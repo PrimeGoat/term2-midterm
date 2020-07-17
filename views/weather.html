@@ -3,26 +3,132 @@
 	Thurs 7-16-2000<br>
 	<img src="https://openweathermap.org/img/wn/10d@2x.png" width="100px" height="100px"><br>
 	<span class="temperature">82&deg;</span><br>
-	<span class="weatherDesc">Sunny</b><br>
+	<span class="weatherDesc">Sunny</span><br>
+	High: HIGH<br>
+	Low: LOW<br>
 </div>
+<br><br><br><br><br><br>
+
+<div id=output>
+<div class="weekWeather">
+	<p class="weekCity"><b>Brooklyn, NY</b></p>
+
+	<div class="dayWeather">
+		Thurs 7-16-2000<br>
+		<img src="https://openweathermap.org/img/wn/10d@2x.png" width="100px" height="100px"><br>
+		<span class="temperature">82&deg;</span><br>
+		<span class="weatherDesc">Sunny</span><br>
+		High: HIGH<br>
+		Low: LOW<br>
+	</div>
+	<div class="dayWeather">
+		Thurs 7-16-2000<br>
+		<img src="https://openweathermap.org/img/wn/10d@2x.png" width="100px" height="100px"><br>
+		<span class="temperature">82&deg;</span><br>
+		<span class="weatherDesc">Sunny</span><br>
+		High: HIGH<br>
+		Low: LOW<br>
+	</div>
+	<div class="dayWeather">
+		Thurs 7-16-2000<br>
+		<img src="https://openweathermap.org/img/wn/10d@2x.png" width="100px" height="100px"><br>
+		<span class="temperature">82&deg;</span><br>
+		<span class="weatherDesc">Sunny</span><br>
+		High: HIGH<br>
+		Low: LOW<br>
+	</div>
+	<div class="dayWeather">
+		Thurs 7-16-2000<br>
+		<img src="https://openweathermap.org/img/wn/10d@2x.png" width="100px" height="100px"><br>
+		<span class="temperature">82&deg;</span><br>
+		<span class="weatherDesc">Sunny</span><br>
+		High: HIGH<br>
+		Low: LOW<br>
+	</div>
+	<div class="dayWeather">
+		Thurs 7-16-2000<br>
+		<img src="https://openweathermap.org/img/wn/10d@2x.png" width="100px" height="100px"><br>
+		<span class="temperature">82&deg;</span><br>
+		<span class="weatherDesc">Sunny</span><br>
+		High: HIGH<br>
+		Low: LOW<br>
+	</div>
+	<div class="dayWeather">
+		Thurs 7-16-2000<br>
+		<img src="https://openweathermap.org/img/wn/10d@2x.png" width="100px" height="100px"><br>
+		<span class="temperature">82&deg;</span><br>
+		<span class="weatherDesc">Sunny</span><br>
+		High: HIGH<br>
+		Low: LOW<br>
+	</div>
+	<div class="dayWeather">
+		Thurs 7-16-2000<br>
+		<img src="https://openweathermap.org/img/wn/10d@2x.png" width="100px" height="100px"><br>
+		<span class="temperature">82&deg;</span><br>
+		<span class="weatherDesc">Sunny</span><br>
+		High: HIGH<br>
+		Low: LOW<br>
+	</div>
+</div>
+</div>
+<br><br><br><br><br>
 
 <style>
-	.dayWeather {
-		align-content: center;
-		align-items: center;
-		width: 175px;
-		height: 300px;
-		margin: auto;
-		text-align: center;
-		background-color: gray;
-	}
+	#output {
+	position: relative;
+	width: 800px;
+	height: 600px;
+	background-color: rgba(0, 191, 0, 0.25);
+	overflow: hidden;
+	font-size: larger;
+	box-sizing: border-box;
+	padding: 0px;
+	text-align: center;
+}
 
-	.temperature {
-		font-size: 100px;
-		font-weight: bold;
-		padding-left: 15px;
-	}
-	.weatherDesc {
-		font-size: xx-large;
-	}
+.weekWeather {
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: stretch;
+	align-content: flex-start;
+	object-fit: scale-down;
+	margin: 0px;
+	width: 750px;
+	height: 550px;
+	transform: scale(0.75, 0.75);
+	top: 0px;
+	left: 0px;
+}
+.weekCity {
+	position: absolute;
+	top: -40px;
+	left: 0px;
+}
+
+
+.dayWeather {
+	position: relative;
+	width: 175px;
+	/*margin: auto;*/
+	text-align: center;
+	background-color: lightgray;
+	text-transform: capitalize;
+	margin: 5px;
+}
+
+.temperature {
+	font-size: 100px;
+	font-weight: bold;
+	padding-left: 15px;
+	line-height: 80px;
+	height: 80px;
+}
+
+.weatherDesc {
+	font-size: xx-large;
+}
+
 </style>
