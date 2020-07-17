@@ -1,78 +1,71 @@
-html, body {
-	margin: 0px;
-	padding: 0px;
-}
+* { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 
+html {
+  height: 100%;
+}
 body {
-	background-color: #bce7be;
-	background-image: url('/images/main-background.png');
+  padding: 0;
+  margin: 0;
+  font-family: "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+  font-weight: 300;
+  background: #f7f7f7 url(../images/geometry.png) 0 0 no-repeat;
+  background-size: cover;
+  color: #333;
 }
-
-.header {
-	/*position: absolute;*/
-	width: 100%;
-	height: 200px;
-	left: 0px;
-	top: 0px;
-	background-color: chartreuse;
-	background-image: url('/images/header.png'), url('/images/header-background.png');
-	background-repeat: no-repeat, repeat-x;
-	display: block;
-	margin-bottom: 10px;
+footer {
+  font-size: 0.75em;
+  color: silver;
+  position: fixed;
+  bottom: 1em;
+  left: 1em;
 }
-
-.left {
-	width: 400px;
+footer a {
+  color: #f80;
 }
-
-.main {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-	width: 90%;
-	margin: auto;
-	padding-bottom: 30px;
+header {
+  margin: 2em 0;
+  text-align: center;
 }
-
-.talkBox {
-	overflow-wrap: break-word;
-	hyphens: auto;
-	width: 400px;
+h1, h2, h3 {
+  margin: 0;
+  text-rendering: optimizeLegibility;
+  text-align: center;
 }
-
-.container {
-	position: relative;
-	min-height: 100vh;
-	/*min-height: calc(100vh - 20px);*/
+h1 {
+  font-weight: 400;
+  font-size: 3em;
 }
-
-.footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 20px;
-	background-color: black;
-	margin-top: 5px;
-	display: block;
+h2 {
+  font-weight: 300;
+  margin-top: 0.5em;
 }
-
+section {
+  margin: 1.5em auto;
+  width: 400px;
+}
 button {
   display: block;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   width: 200px;
   height: 200px;
   border: 0;
   border-radius: 50%;
   padding: .7em 1em;
-  margin: 4em 0 3em;
+  margin: 4em auto 3em;
   text-align: center;
   color: #fff;
-  background-image: url('/images/mic.png');
-  background-size: cover;
-  /*background: linear-gradient(180deg, #39C2C9 0%, #3FC8C9 80%, #3FC8C9 100%);*/
+  background: linear-gradient(180deg, #39C2C9 0%, #3FC8C9 80%, #3FC8C9 100%);
   box-shadow: 2px 5px 30px rgba(63, 200, 201, .4);
 
   will-change: transform, filter;
   transition: all 0.3s ease-out;
+}
+button .fa {
+  font-size: 130px;
+  line-height: 200px;
+  margin: 0;
+  text-shadow: 1px 2px 2px #2a8b90;
 }
 button:hover {
   transform: scale(.92);
@@ -84,63 +77,15 @@ button:focus {
   outline: 0;
 }
 
-#output {
-	position: relative;
-	width: 800px;
-	height: 600px;
-	background-color: rgba(0, 191, 0, 0.25);
-	overflow: hidden;
-	font-size: larger;
-	box-sizing: border-box;
-	padding: 0px;
-	text-align: center;
-	margin: auto;
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: 1.3em;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-left: 10px;
 }
-
-/* WEATHER */
-.weekWeather {
-	position: absolute;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: stretch;
-	align-content: stretch;
-	object-fit: scale-down;
-	margin: 0px;
-	width: 750px;
-	height: 550px;
-	transform: scale(0.75, 0.75);
-	top: 0px;
-	left: 0px;
-}
-
-.weekCity {
-	position: absolute;
-	top: -40px;
-	left: 0px;
-}
-
-.dayWeather {
-	position: relative;
-	width: 175px;
-	margin: 5px;
-	text-align: center;
-	background-color: lightgray;
-	text-transform: capitalize;
-}
-
-.temperature {
-	font-size: 100px;
-	font-weight: bold;
-	padding-left: 15px;
-	line-height: 80px;
-	height: 80px;
-}
-
-.weatherDesc {
-	display: inline-block;
-	font-size: xx-large;
-	height: 2em;
-	padding-bottom: 5px;
+.fa-github::before {
+    content: "\f09b";
 }

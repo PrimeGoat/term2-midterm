@@ -1,7 +1,6 @@
 const dialogflow = require('dialogflow');
 const uuid = require('uuid');
 const textToSpeech = require('@google-cloud/text-to-speech');
-const getWeather = require('./getWeather');
 
 /**
  * Send a query to the dialogflow agent, and return the query result.
@@ -38,62 +37,34 @@ async function runSample(input, projectId = 'development-283417') {
 
     // Send request and log result
     const responses = await sessionClient.detectIntent(request);
+    //console.log('Detected intent');
     const result = responses[0].queryResult;
-	return result;
+    //console.log(`  Query: ${result.queryText}`);
+	//console.log(`  Response: ${result.fulfillmentText}`);
+    if (result.intent) {
+        //console.log(`  Intent: ${result.intent.displayName}`);
+    } else {
+        //console.log(`  No intent matched.`);
+	}
+	console.log("object: ", JSON.stringify(result.fulfillmentText));
+	return result.fulfillmentText;
 }
 
-// Handle incoming speech
+console.log("EH");
+
 const inputText = async function(text, socket) {
-	let result = await runSample(text);
-
-	let output;
-	if(result.allRequiredParamsPresent) {
-		output = await parseCommand(result.action, result.parameters, result.intent, socket);
-	}
-
-	let response = (output != undefined) ? output : result.fulfillmentText;
-
-	let audio = await textToAudioBuffer(response);  // Turn text into speech
+	console.log("Start")
+	let response = await runSample(text);
+	console.log("got Response", response)
+	let audio = await textToAudioBuffer(response);
+	console.log("got audio")
 
 	socket.emit('bot reply', response);
 	socket.emit('bot audio', audio);
 }
 
-const parseCommand = async function(command, parameters, intent, socket) {
-	for(entry of cmd) {
-		if(command.toLowerCase() == entry.command.toLowerCase()) {
-			try {
-				retVal = await entry.callback(command, parameters, intent, socket);
-			} catch(err) {
-				console.error(`Bot Command "${command}" had error:`, err);
-			}
-			if(typeof(err) == "undefined" && typeof(retVal) != "undefined" && retVal != "") {
-				return retVal;
-			}
-		}
-	}
-	return null;
-}
-
-// Bot command handler
-const cmd = [];
-
-const addCmd = function(command, callback) {
-	cmd.push({
-		command: command,
-		callback: callback
-	});
-}
-
-addCmd("getWeather", getWeather.command);
-
-const clearOutput = function(command, parameters, intent, socket) {
-	socket.emit("content", "");
-}
-addCmd("clearOutput", clearOutput);
-
-
 async function textToAudioBuffer(text) {
+	console.log("TTS: ", text);
 	requestTTS.input = { text: text }; // text or SSML
 	// Performs the Text-to-Speech request
 	const response = await ttsClient.synthesizeSpeech(requestTTS);
@@ -119,7 +90,7 @@ function setupTTS() {
 		voice: {
 			languageCode: 'en-US', //https://www.rfc-editor.org/rfc/bcp/bcp47.txt
 			ssmlGender: 'FEMALE',  //  'MALE|FEMALE|NEUTRAL'
-			name: 'en-US-Wavenet-F' // That's the voice I chose.  There were many choices, including English in an Indian accent
+			name: 'en-US-Wavenet-F'
 		},
 		// Select the type of audio encoding
 		audioConfig: {
