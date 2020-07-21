@@ -1,10 +1,10 @@
 'use strict';
 require('dotenv').config();
 const express = require('express');
-const aibot = require('./aibot');
+const aibot = require('./aibot'); // Loads AI bot
 const cors = require('cors');
-const getWeather = require('./getWeather');
-const misc = require('./misc');
+const getWeather = require('./getWeather'); // Weather functionality
+const misc = require('./misc'); // Misc functionality
 
 const app = express();
 app.use(cors());
@@ -15,6 +15,7 @@ const server = app.listen(process.env.PORT || 5000, () => {
 	console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
 
+// Communicate with browser
 const io = require('socket.io')(server);
 io.on('connection', function(socket){
 	console.log('a user connected');
@@ -33,6 +34,6 @@ io.on('connection', function(socket) {
 	});
 });
 
-
+// Add bot commands
 aibot.addCmd("getWeather", getWeather.command);
 misc.addMe(aibot.addCmd);
