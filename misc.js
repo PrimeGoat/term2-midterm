@@ -1,5 +1,6 @@
 const moment = require('moment');
 
+// Deals with 'getAge' intent
 const getAge = function(command, parameters, intent, socket) {
 	const dob = moment("2020-07-15T16:20:00-04:00");
 	console.log("GetAge has been called");
@@ -68,6 +69,7 @@ const pluralize = function(amount, singular, plural) {
 	else return plural;
 }
 
+// Registers the 'getAge' intent callback
 const addMe = function(callback) {
 	callback("getAge", getAge);
 }

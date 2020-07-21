@@ -5,15 +5,14 @@ const owApiKey = "a86143ef460f0fc8a12b59a6ee48892f";
 const zcApiKey = "MVEQXqLX9ueko5O28CNSKfMAdU8Jr63TCCMIdMe22ScA0w1lgAR6liADIaTn8pMz";
 const defaultZipCode = "11235";
 
-
+// Command to run when encountering "getWeather" intent
 const command = async function(command, parameters, intent, socket) {
 	let datetime = parameters.fields['date-time'].stringValue || moment().format();
 	let type = parameters.fields['forecast-type'].stringValue || "daily";
-	console.log("type", type, "Orig zip", parameters.fields.zipcode.stringValue);
 	let zipcode = String(parameters.fields.zipcode.stringValue).replace(/[^0-9]/g, '');
-	console.log("Zipcode:", zipcode);
-	if(isNaN(zipcode) || zipcode.length != 5) return "Invalid zip code."
 
+	// Process zipcode
+	if(isNaN(zipcode) || zipcode.length != 5) return "Invalid zip code."
 	const zipUrl = `https://www.zipcodeapi.com/rest/${zcApiKey}/info.json/${zipcode}/degrees`;
 	let lat, long, cityState;
 	try {
@@ -27,6 +26,7 @@ const command = async function(command, parameters, intent, socket) {
 
 	if(lat == undefined || long == undefined) return "Cannot look up zipcode";
 
+	// Obtain weather forecast
 	const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely&units=imperial&appid=${owApiKey}`;
 
 	let result;
@@ -41,7 +41,7 @@ const command = async function(command, parameters, intent, socket) {
 	console.log("Weather Forecast", command, moment(datetime).format('dddd, MMM D'), type);
 
 	let content, checkDay;
-	// The weather forecast
+	// The weather forecast - process based on user-specified type
 	switch(type) {
 		case "hourly":
 			// Check to see if the target date is today
@@ -106,6 +106,7 @@ const command = async function(command, parameters, intent, socket) {
 	return content; // "Your weather forecast is available in the output area.";
 }
 
+// Generates HTML version of forecast
 const displayForecast = function(timestamp, cityState, type, result) {
 	let output = '';
 
@@ -135,6 +136,7 @@ const displayForecast = function(timestamp, cityState, type, result) {
 	return output;
 }
 
+// Gets a specified day from a forecast
 const getDay = function(date, result, consecutive = 1) {
 	checkDay = moment(date).format('YYYY DDD');
 	let days = [], moreDays = 0;
@@ -150,6 +152,7 @@ const getDay = function(date, result, consecutive = 1) {
 	return days;
 }
 
+// Generates an icon URL based on weather icon name
 const iconUrl = function(name) {
 	return `https://openweathermap.org/img/wn/${name}@2x.png`
 }

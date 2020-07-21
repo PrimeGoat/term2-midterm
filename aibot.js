@@ -2,6 +2,7 @@ const dialogflow = require('dialogflow');
 const uuid = require('uuid');
 const textToSpeech = require('@google-cloud/text-to-speech');
 
+// Sends a string to DialogFlow to obtain intent
 async function runSample(input, projectId = 'development-283417') {
     // A unique identifier for the given session
     //  const sessionId = uuid.v4();
@@ -37,7 +38,7 @@ async function runSample(input, projectId = 'development-283417') {
 	return result;
 }
 
-// Handle incoming speech
+// Handle incoming speech from browser
 const inputText = async function(text, socket) {
 	let result = await runSample(text);
 
@@ -54,6 +55,7 @@ const inputText = async function(text, socket) {
 	socket.emit('bot audio', audio);
 }
 
+// Identifies recognized commands and calls their listed function
 const parseCommand = async function(command, parameters, intent, socket) {
 	for(entry of cmd) {
 		if(command.toLowerCase() == entry.command.toLowerCase()) {
@@ -80,13 +82,13 @@ const addCmd = function(command, callback) {
 	});
 }
 
-
+// Clears the output buffer
 const clearOutput = function(command, parameters, intent, socket) {
 	socket.emit("content", "");
 }
 addCmd("clearOutput", clearOutput);
 
-
+// Text to speech
 async function textToAudioBuffer(text) {
 	requestTTS.input = { text: text }; // text or SSML
 	// Performs the Text-to-Speech request
@@ -113,7 +115,7 @@ function setupTTS() {
 		voice: {
 			languageCode: 'en-US', //https://www.rfc-editor.org/rfc/bcp/bcp47.txt
 			ssmlGender: 'FEMALE',  //  'MALE|FEMALE|NEUTRAL'
-			name: 'en-US-Wavenet-F' // That's the voice I chose.  There were many choices, including English in an Indian accent
+			name: 'en-US-Wavenet-F' // That's the voice I chose.  There were many choices.  The WaveNet ones are the highest quality
 		},
 		// Select the type of audio encoding
 		audioConfig: {

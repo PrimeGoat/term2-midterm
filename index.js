@@ -11,6 +11,7 @@ app.use(cors());
 app.use(express.static(__dirname + '/views')); // html
 app.use(express.static(__dirname + '/public')); // js, css, images
 
+// Set up express web server
 const server = app.listen(process.env.PORT || 5000, () => {
 	console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
