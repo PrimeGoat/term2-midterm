@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const morgan = require('morgan');
 const port = process.env.PORT || 3000;
 require('dotenv').config();
@@ -21,7 +20,6 @@ const mailjet = require ('node-mailjet')
 .connect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
 
 const app = express();
-app.use(cors());
 app.use(morgan('dev'));
 app.use(cookieParser('process.env.SECRET'));
 app.use(session({
@@ -64,6 +62,16 @@ app.use(express.static(path.join(__dirname, 'public'))); // js, css, images
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Scopes variables into views
+app.use((req, res, next) => {
+	res.locals.user = req.user;
+	res.locals.errors = req.flash('errors');
+	res.locals.success = req.flash('success');
+
+	next();
+});
+
+
 // Set up API router
 const apiRouter = require('./routes/apiRouter');
 app.use('/api/v1/', apiRouter);
@@ -80,6 +88,8 @@ const misc = require('./misc'); // Misc functionality
 const server = app.listen(process.env.PORT || 5000, () => {
 	console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
+app.use(cors());
+
 
 // Communicate with browser
 const io = require('socket.io')(server);
