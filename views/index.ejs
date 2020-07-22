@@ -12,7 +12,17 @@
 			</div>
 
 			<div class="main">
-				<h1>Welcome to the NOVA AI bot.  Please register or log in to use the bot.</h1>
+				<h1>
+				<% if (success.length) { %>
+					<%= success %>
+				<% } %>
+				<% if (errors.length) { %>
+					<%= errors %>
+				<% } %></h1>
+				<br>
+				<h1>Welcome to the NOVA AI bot.  Please register or log in to use the bot.</h1><br>
+				<a href="/register"><h2>Click here to register</h2></a><br>
+				<a href="/login"><h2>Click here to log in</h2></a>
 			</div>
 
 			<div class="footer">

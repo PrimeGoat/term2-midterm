@@ -15,6 +15,7 @@ const bcrypt = require('bcryptjs');
 const { nanoid } = require("nanoid");
 //const { x } = require("./myModule");
 const User = require('./models/User');
+const Bot = require('./models/User');
 require('./lib/passport');
 const mailjet = require ('node-mailjet')
 .connect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
@@ -75,6 +76,43 @@ app.use((req, res, next) => {
 // Set up API router
 const apiRouter = require('./routes/apiRouter');
 app.use('/api/v1/', apiRouter);
+
+
+app.get('/', (req, res) => {
+	res.render('index');
+});
+
+app.get('/register', (req, res) => {
+	res.render('register');
+});
+
+app.get('/thankyou', (req, res) => {
+	res.render('thankyou');
+});
+
+const auth = (req, res, next) => {
+	if(req.isAuthenticated()) {
+		next();
+	} else {
+		return res.render('mustlogin');
+	}
+}
+
+app.get('/bot', auth, (req, res) => {
+	res.render('bot');
+});
+
+app.get('/login', (req, res) => {
+	res.render('login');
+});
+
+app.get('/logout', (req, res) => {
+	req.logout();
+	req.flash('success', 'You are now logged out');
+	res.redirect('/');
+})
+
+
 
 // Main bot stuff below
 const aibot = require('./aibot'); // Loads AI bot
