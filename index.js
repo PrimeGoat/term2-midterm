@@ -64,6 +64,9 @@ app.use(express.static(path.join(__dirname, 'public'))); // js, css, images
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Set up API router
+const apiRouter = require('./routes/apiRouter');
+app.use('/api/v1/', apiRouter);
 
 // Main bot stuff below
 const aibot = require('./aibot'); // Loads AI bot
