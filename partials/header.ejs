@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Nova AI Bot</title>
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+	<body>
+		<div class="container">
+			<div class="header">
+				<div class="menu">
+					<a href="/"><img src="/images/main.png"></a>
+					<a href="/about"><img src="/images/about.png"></a>
+					<a href="/bot"><img src="/images/bot.png"></a>
+					<% if(typeof(isAuthenticated) != 'undefined' && isAuthenticated) { %>
+						<a href="/user"><img src="/images/user.png"></a>
+					<% } %>
+				</div>
+			</div>

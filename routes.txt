@@ -1,0 +1,24 @@
+
+DIRECT:
+GET /
+GET /bot
+GET /register
+GET /login
+GET /logout
+GET /thankyou
+GET /about
+
+
+API: /api/v1/
+
+POST /register
+GET /userinfo
+PUT /updateuser
+DELETE /deleteuser
+POST /login
+PUT /updatepassword
+
+
+Todo:
+- GET about: neural networks & AI
+- GET bot usage stats

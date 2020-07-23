@@ -81,35 +81,35 @@ const auth = (req, res, next) => {
 	if(req.isAuthenticated()) {
 		next();
 	} else {
-		return res.render('mustlogin');
+		return res.render('mustlogin', {isAuthenticated: req.isAuthenticated()});
 	}
 }
 
 app.get('/', (req, res) => {
-	res.render('index');
+	res.render('index', {isAuthenticated: req.isAuthenticated()});
 });
 
 app.get('/bot', auth, (req, res) => {
-	res.render('bot');
+	res.render('bot', {isAuthenticated: req.isAuthenticated()});
 });
 
 app.get('/register', (req, res) => {
-	res.render('register');
+	res.render('register', {isAuthenticated: req.isAuthenticated()});
 });
 
 app.get('/login', (req, res) => {
-	res.render('login');
+	res.render('login', {isAuthenticated: req.isAuthenticated()});
 });
 
 app.get('/thankyou', (req, res) => {
-	res.render('thankyou');
+	res.render('thankyou', {isAuthenticated: req.isAuthenticated()});
 });
 
 
 app.get('/logout', (req, res) => {
 	req.logout();
 	req.flash('success', 'You are now logged out.');
-	res.redirect('/');
+	res.redirect('/', {isAuthenticated: req.isAuthenticated()});
 })
 
 
