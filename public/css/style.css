@@ -25,7 +25,16 @@ body {
 	width: 400px;
 }
 
-.main {
+.mainCol {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	width: 90%;
+	margin: auto;
+	padding-bottom: 30px;
+}
+
+.mainRow {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-evenly;
@@ -152,4 +161,8 @@ button:focus {
 	display: flex;
 	flex-direction: row;
 	padding: 0px;
+}
+
+#userHolder {
+	display: none;
 }

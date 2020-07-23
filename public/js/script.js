@@ -20,17 +20,28 @@ recognition.addEventListener('speechstart', () => {
   console.log('Speech has been detected.');
 });
 
+
+// SEND USER'S SPEECH TO BOT
 recognition.addEventListener('result', (e) => {
-  console.log('Result has been detected.');
+	console.log('Result has been detected.');
 
-  let last = e.results.length - 1;
-  let text = e.results[last][0].transcript;
+	let last = e.results.length - 1;
+	let text = e.results[last][0].transcript;
 
-  outputYou.textContent = text;
-  console.log('Confidence: ' + e.results[0][0].confidence);
+	outputYou.textContent = text;
+	console.log('Confidence: ' + e.results[0][0].confidence);
 
-  socket.emit('chat message', text);
+	// Obtain username
+	const userHolder = document.getElementById("userHolder");
+	const userName = userHolder.getAttribute("data-username");
+	console.log("Obtained username:", userName);
+
+	socket.emit('chat message', userName, text); // Transmit username to be used as the session ID
 });
+
+
+
+
 
 recognition.addEventListener('speechend', () => {
   recognition.stop();

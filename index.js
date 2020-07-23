@@ -65,10 +65,12 @@ app.use(express.urlencoded({ extended: false }));
 
 // Scopes variables into views
 app.use((req, res, next) => {
-	res.locals.user = req.user;
+	//res.locals.user = req.user;
+	res.locals.user = "Test User";
+	//res.locals.isAuthenticated = req.isAuthenticated();
+	res.locals.isAuthenticated = true;
 	res.locals.errors = req.flash('errors');
 	res.locals.success = req.flash('success');
-
 	next();
 });
 
@@ -81,35 +83,39 @@ const auth = (req, res, next) => {
 	if(req.isAuthenticated()) {
 		next();
 	} else {
-		return res.render('mustlogin', {isAuthenticated: req.isAuthenticated()});
+		return res.render('mustlogin');
 	}
 }
 
 app.get('/', (req, res) => {
-	res.render('index', {isAuthenticated: req.isAuthenticated()});
+	res.render('index');
 });
 
-app.get('/bot', auth, (req, res) => {
-	res.render('bot', {isAuthenticated: req.isAuthenticated()});
+app.get('/bot', /*auth,*/ (req, res) => {
+	res.render('bot');
 });
 
 app.get('/register', (req, res) => {
-	res.render('register', {isAuthenticated: req.isAuthenticated()});
+	res.render('register');
 });
 
 app.get('/login', (req, res) => {
-	res.render('login', {isAuthenticated: req.isAuthenticated()});
+	res.render('login');
 });
 
 app.get('/thankyou', (req, res) => {
-	res.render('thankyou', {isAuthenticated: req.isAuthenticated()});
+	res.render('thankyou');
+});
+
+app.get('/about', (req, res) => {
+	res.render('about');
 });
 
 
 app.get('/logout', (req, res) => {
 	req.logout();
 	req.flash('success', 'You are now logged out.');
-	res.redirect('/', {isAuthenticated: req.isAuthenticated()});
+	res.redirect('/');
 })
 
 
@@ -141,10 +147,10 @@ io.on('connection', function(socket){
 // });
 
 io.on('connection', function(socket) {
-	socket.on('chat message', (text) => {
-    console.log('Message: ' + text);
-
-	aibot.inputText(text, socket);
+	socket.on('chat message', (username, text) => {
+		console.log('Username:', username);
+		console.log('Message: ' + text);
+		aibot.inputText(text, socket);
 	});
 });
 

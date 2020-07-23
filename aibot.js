@@ -1,12 +1,14 @@
 const dialogflow = require('dialogflow');
 const uuid = require('uuid');
 const textToSpeech = require('@google-cloud/text-to-speech');
+require('dotenv').config();
+
 
 // Sends a string to DialogFlow to obtain intent
-async function runSample(input, projectId = 'development-283417') {
+async function runSample(input, sessionId = 'tokendomelakalema') {
     // A unique identifier for the given session
-    //  const sessionId = uuid.v4();
-	const sessionId = "tokendomelakalema";
+	//  const sessionId = uuid.v4();
+	const projectId = process.env.PROJECTID;
 
 	const config = {
 		credentials: {
@@ -39,8 +41,8 @@ async function runSample(input, projectId = 'development-283417') {
 }
 
 // Handle incoming speech from browser
-const inputText = async function(text, socket) {
-	let result = await runSample(text);
+const inputText = async function(text, socket, sessionId = 'tokendomelakalema') {
+	let result = await runSample(text, sessionId);
 
 	let output;
 	if(result.allRequiredParamsPresent) {
