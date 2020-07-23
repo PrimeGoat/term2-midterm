@@ -60,6 +60,7 @@ const readableSpan = function(seconds) {
 	if(minutes)		out.push(`${minutes} ${pluralize(minutes, "minute", "minutes")}`);
 	if(seconds)		out.push(`${seconds} ${pluralize(seconds, "second", "seconds")}`);
 
+	out[out.length - 1] = "and " + out[out.length - 1];
 	return out.join(", ");
 }
 
