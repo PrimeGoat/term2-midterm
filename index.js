@@ -77,19 +77,6 @@ app.use((req, res, next) => {
 const apiRouter = require('./routes/apiRouter');
 app.use('/api/v1/', apiRouter);
 
-
-app.get('/', (req, res) => {
-	res.render('index');
-});
-
-app.get('/register', (req, res) => {
-	res.render('register');
-});
-
-app.get('/thankyou', (req, res) => {
-	res.render('thankyou');
-});
-
 const auth = (req, res, next) => {
 	if(req.isAuthenticated()) {
 		next();
@@ -98,17 +85,30 @@ const auth = (req, res, next) => {
 	}
 }
 
+app.get('/', (req, res) => {
+	res.render('index');
+});
+
 app.get('/bot', auth, (req, res) => {
 	res.render('bot');
+});
+
+app.get('/register', (req, res) => {
+	res.render('register');
 });
 
 app.get('/login', (req, res) => {
 	res.render('login');
 });
 
+app.get('/thankyou', (req, res) => {
+	res.render('thankyou');
+});
+
+
 app.get('/logout', (req, res) => {
 	req.logout();
-	req.flash('success', 'You are now logged out');
+	req.flash('success', 'You are now logged out.');
 	res.redirect('/');
 })
 
