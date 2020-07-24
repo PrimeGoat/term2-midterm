@@ -93,7 +93,7 @@ button:focus {
   outline: 0;
 }
 
-#output {
+.output {
 	position: relative;
 	width: 800px;
 	height: 600px;
@@ -104,6 +104,18 @@ button:focus {
 	padding: 0px;
 	text-align: center;
 	margin: auto;
+}
+
+.loginBox {
+	width: 600px;
+	height: 400px;
+
+}
+
+.formEntries {
+	text-align: left;
+	margin: auto;
+	width: 300px;
 }
 
 /* WEATHER */

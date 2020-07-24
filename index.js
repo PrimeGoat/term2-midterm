@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 require('dotenv').config();
 const path = require('path');
 const flash = require('connect-flash');
@@ -8,17 +8,11 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
-const { check, validationResult } = require('express-validator');
-const { userInfo } = require('os');
 let MongoStore = require('connect-mongo')(session)
-const bcrypt = require('bcryptjs');
-const { nanoid } = require("nanoid");
-//const { x } = require("./myModule");
-const User = require('./models/User');
-const Bot = require('./models/User');
-require('./lib/passport');
-const mailjet = require ('node-mailjet')
-.connect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
+
+// const User = require('./models/User');
+// const Bot = require('./models/User');
+// require('./lib/passport');
 
 const app = express();
 app.use(morgan('dev'));
@@ -65,10 +59,11 @@ app.use(express.urlencoded({ extended: false }));
 
 // Scopes variables into views
 app.use((req, res, next) => {
-	//res.locals.user = req.user;
-	res.locals.user = "Test User";
-	//res.locals.isAuthenticated = req.isAuthenticated();
-	res.locals.isAuthenticated = true;
+	if(typeof(req.user) != 'undefined') res.locals.user = req.user.email;
+	else res.locals.user = "None";
+	//res.locals.user = "Test User";
+	res.locals.isAuthenticated = req.isAuthenticated();
+	//res.locals.isAuthenticated = true;
 	res.locals.errors = req.flash('errors');
 	res.locals.success = req.flash('success');
 	next();
@@ -91,7 +86,7 @@ app.get('/', (req, res) => {
 	res.render('index');
 });
 
-app.get('/bot', /*auth,*/ (req, res) => {
+app.get('/bot', auth, (req, res) => {
 	res.render('bot');
 });
 
@@ -115,7 +110,7 @@ app.get('/about', (req, res) => {
 app.get('/logout', (req, res) => {
 	req.logout();
 	req.flash('success', 'You are now logged out.');
-	res.redirect('/');
+	return res.redirect('/');
 })
 
 
@@ -129,7 +124,7 @@ const misc = require('./misc'); // Misc functionality
 //const app = express();
 
 // Set up express web server
-const server = app.listen(process.env.PORT || 5000, () => {
+const server = app.listen(port, () => {
 	console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
 app.use(cors());
@@ -140,11 +135,6 @@ const io = require('socket.io')(server);
 io.on('connection', function(socket){
 	console.log('a user connected');
 });
-
-// Web UI
-// app.get('/', (req, res) => {
-// 	res.sendFile('index.html');
-// });
 
 io.on('connection', function(socket) {
 	socket.on('chat message', (username, text) => {

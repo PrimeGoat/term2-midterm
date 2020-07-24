@@ -1,7 +1,27 @@
 <%- include('../partials/header', {title: "Test"}); %>
 
 <div class="mainCol">
-	<h1>LOGIN HERE</h1>
+	<div class="output loginBox">
+		<h1>LOGIN</h1>
+		<h3>
+			<% if (success.length) { %>
+				<%= success %>
+			<% } %>
+			<% if (errors.length) { %>
+				<%= errors %>
+			<% } %><br>
+		</h3>
+		<form action="/api/v1/login" method="post">
+			<div class=formEntries>
+				<label for="email">Email Address:</label><br>
+				<input type="text" name="email" id="email"><br><br>
+				<label for="password">Password:</label><br>
+				<input type="text" name="password" id="password" type="password"><br><br>
+				<input type="submit" name="submit" value="Submit">
+				<a href="/register">Register here</a>
+			</div>
+		</form>
+	</div>
 </div>
 
 <%- include('../partials/footer', {title: "Test"}); %>
