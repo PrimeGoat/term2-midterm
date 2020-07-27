@@ -16,7 +16,7 @@ const bcrypt = require('bcryptjs');
 const { nanoid } = require("nanoid");
 //const { x } = require("./myModule");
 const User = require('../models/User');
-const Bot = require('../models/User');
+//const Bot = require('../models/Bot');
 require('../lib/passport');
 const mailjet = require ('node-mailjet')
 .connect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
@@ -96,30 +96,43 @@ const loginCheck = [
 	check('password').isLength({min: 3})
 ];
 
-const loginValidate = (req, res, next) => {
+router.get('/passcheck', (req, res, next) => {
+/*const loginValidate = (req, res, next) => {
 	const info = validationResult(req);
 	console.log("INFO: ", info);
 	if(!info.isEmpty()) {
 		console.log("Invalid");
 		req.flash('errors', 'Invalid email or password');
 		return res.redirect('/login');
-	}
-	User.findOne({ email: req.body.email })
+	}*/
+	let result;
+	console.log("User logged in, checking password check.  WHEE");
+	User.findOne({ email: req.user.email })
 	.then(user => {
-		if(user) {
-			if(user.mustChange) {
-				console.log(user.email + " Still needs to change their initial password.");
-				req.flash('errors', 'You tried to log in but you must change your password first.');
-				return res.redirect('updatepassword');
-			}
+		console.log("User found", user);
+		if(user && user.mustChange) {
+			console.log(user.email + " Still needs to change their initial password.");
+			//req.flash('errors', 'You tried to log in but you must change your password first.');
+			//return res.redirect('/bot');
+			console.log("UPDATE PASS!");
+			result = "pass";
+			return res.redirect('/updatepassword');
+		} else {
+			result = "bot";
+			console.log("BOT!!");
+			return res.redirect('/bot');
 		}
+	})
+	.catch(err => {
+		console.log("Error:", err);
 	});
 
-	next();
-};
+	console.log("FALLBACK: BOT", result);
+	//return res.redirect('/bot');
+});
 
 router.post('/login', loginCheck, /*loginValidate,*/ passport.authenticate('local-login', {
-	successRedirect: '/bot',
+	successRedirect: '/api/v1/passcheck',
 	failureRedirect: '/login',
 	failureFlash: true
 }));

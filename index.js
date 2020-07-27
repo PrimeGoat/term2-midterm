@@ -106,12 +106,20 @@ app.get('/about', (req, res) => {
 	res.render('about');
 });
 
+app.get('/about', (req, res) => {
+	res.render('about');
+});
+
+app.get('/updatepassword', (req, res) => {
+	return res.render('updatepassword');
+});
+
 
 app.get('/logout', (req, res) => {
 	req.logout();
 	req.flash('success', 'You are now logged out.');
 	return res.redirect('/');
-})
+});
 
 
 
