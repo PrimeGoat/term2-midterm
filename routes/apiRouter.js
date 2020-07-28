@@ -276,7 +276,7 @@ const populateUserInfo = ((req, res, next) => {
 });
 
 router.get('/userinfo', populateUserInfo, (req, res) => {
-	res.render('user');
+	res.render('userinfo');
 });
 
 
