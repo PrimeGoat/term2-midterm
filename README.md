@@ -29,13 +29,13 @@ There were supposed to be PUT and DELETE routes, but HTML forms only support GET
 * `GET /about`: Provides information about the technologies used in this project.
 * `GET /updatepassword`: Lets you update your password.
 * `GET /logoug`: Logs you off.
-* `POST /api/v1/register`:
-* `GET /api/v1/deleteuser`:
-* `GET /api/v1/passcheck`:
-* `POST /api/v1/login`:
-* `POST /api/v1/updatepassword`:
-* `POST /api/v1/updateuser`:
-* `GET /api/v1/userinfo`:
+* `POST /api/v1/register`: Creates user and sends email out.
+* `GET /api/v1/deleteuser`: Deletes user.
+* `GET /api/v1/passcheck`: Checks to see if the user needs to change their password or not.
+* `POST /api/v1/login`: Logs the user in.
+* `POST /api/v1/updatepassword`: Updates the user's password.
+* `POST /api/v1/updateuser`: Updates the user's info.
+* `GET /api/v1/userinfo`: Displays the user's info.
 
 ## Environment Variables
 * `SECRET`: Used by CookieParser.

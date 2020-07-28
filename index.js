@@ -14,6 +14,7 @@ let MongoStore = require('connect-mongo')(session)
 // const Bot = require('./models/User');
 // require('./lib/passport');
 
+// Set up express
 const app = express();
 app.use(morgan('dev'));
 app.use(cookieParser('process.env.SECRET'));
@@ -36,12 +37,14 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Log the session and user with each request
 app.use((req, res, next) => {
 	console.log('Session: ', req.session);
 	console.log('User: ', req.user);
 	next();
 });
 
+// Connect to DB
 mongoose.connect(process.env.MONGODB_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
@@ -50,7 +53,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB connected'))
 .catch(err=> console.log('MongoDB Error: ', err))
 
-
+// Set up view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); // html
 app.use(express.static(path.join(__dirname, 'public'))); // js, css, images
@@ -82,6 +85,8 @@ const auth = (req, res, next) => {
 	}
 }
 
+// The routes
+
 app.get('/', (req, res) => {
 	res.render('index');
 });
@@ -110,7 +115,6 @@ app.get('/updatepassword', (req, res) => {
 	return res.render('updatepassword');
 });
 
-
 app.get('/logout', (req, res) => {
 	req.logout();
 	req.flash('success', 'You are now logged out.');
@@ -118,16 +122,14 @@ app.get('/logout', (req, res) => {
 });
 
 
-
 // Main bot stuff below
+
 const aibot = require('./aibot'); // Loads AI bot
 const cors = require('cors');
 const getWeather = require('./getWeather'); // Weather functionality
 const misc = require('./misc'); // Misc functionality
 
-//const app = express();
-
-// Set up express web server
+// Tell web server to start listening
 const server = app.listen(port, () => {
 	console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });

@@ -37,7 +37,6 @@ const command = async function(command, parameters, intent, socket) {
 	}
 
 	result = result.data;
-	//console.log(result);
 	console.log("Weather Forecast", command, moment(datetime).format('dddd, MMM D'), type);
 
 	let content, checkDay;
@@ -157,6 +156,7 @@ const iconUrl = function(name) {
 	return `https://openweathermap.org/img/wn/${name}@2x.png`
 }
 
+// Exports method
 module.exports = {
 	command: command
 }

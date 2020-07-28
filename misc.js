@@ -75,6 +75,7 @@ const addMe = function(callback) {
 	callback("getAge", getAge);
 }
 
+// Export objects and methods
 module.exports = {
 	pluralize: pluralize,
 	readableSpan: readableSpan,
