@@ -79,8 +79,19 @@ router.post('/register', (req, res) => {
 	});
 });
 
-router.delete('/deleteuser', auth, (req, res, next) => {
-    return res.render('deleteuser');
+// Can only use GET and POST
+router.get('/deleteuser', auth, (req, res, next) => {
+	let email = req.user.email;
+	User.deleteOne({ email: req.user.email })
+	.then(user => {
+		console.log("User deleted:", email);
+	})
+	.catch(err => {
+		console.log("Error deleting user:", err);
+	})
+	req.logout();
+	req.flash("success", "User deleted.");
+	return res.redirect('/');
 });
 
 const loginCheck = [
@@ -142,6 +153,9 @@ router.post('/updatepassword', (req, res, next) => {
 			console.log("Incorrect password supplied.");
 			req.flash("errors", "Invalid email or password.");
 			return res.redirect("/updatepassword");
+		} else if(bcrypt.compareSync(req.body.newpass, user.password)) {
+			console.log("New password same as old password.");
+			req.flash("errors", "You tried to update the password to the current password.");
 		}
 
 		// Check if new password is valid
@@ -189,24 +203,51 @@ router.post('/updateuser', auth, (req, res, next) => {
 	.then(user => {
 		console.log("User found", user);
 
-		return;
+		let successes = [];
+		let errors = [];
+
+		// Process name
+		if(req.body.name != req.user.name) {
+			if(req.body.name != "") {
+				user.name = req.body.name;
+				successes.push("Name updated.");
+			} else errors.push("Name cannot be blank.");
+		}
+
+		// Process email
+		if(req.body.email != req.user.email) {
+			if(req.body.email != "" && req.body.email.match(/[^@]+@[^@.]+.[^.]+/)) {
+				user.email = req.body.email;
+				successes.push("Email updated.");
+			}
+			else errors.push("Must provide a valid email address");
+		}
+
 		// Check if current password is correct
-		if(!bcrypt.compareSync(req.body.currentpass, user.password)) {
-			console.log("Incorrect password supplied.");
-			req.flash("errors", "Invalid email or password.");
-			return res.redirect("/updatepassword");
+		if(req.body.newpass != "") {
+			if(!bcrypt.compareSync(req.body.currentpass, user.password)) {
+				console.log("Incorrect password supplied.");
+				errors.push("Incorrect password supplied.");
+			} else if(bcrypt.compareSync(req.body.newpass, user.password)) {
+				console.log("New password same as old password.");
+				errors.push("You tried to update the password to the current password.");
+			} else if(req.body.newpass.length < 3) { // Check if new password is valid
+				console.log("New password too short.");
+				errors.push("Your new password is too short.");
+			} else {
+				// Now we update the password
+				user.password = bcrypt.hashSync(req.body.newpass, bcrypt.genSaltSync(10));
+				successes.push("Password updated.");
+			}
 		}
 
-		// Check if new password is valid
-		if(req.body.newpass.length < 3) {
-			console.log("New password too short.");
-			req.flash("errors", "Your password is too short.");
-			return res.redirect("/updatepassword");
+		if(successes.length == 0) {
+			successes.push("No changes made.");
 		}
 
-		// Now we update the password
-		user.password = bcrypt.hashSync(req.body.newpass, bcrypt.genSaltSync(10));
-		user.mustChange = false;
+		req.flash("success", successes.join('\n'));
+		req.flash("errors", errors.join('\n'));
+
 
 		user.save()
 		.then(user => {
@@ -216,13 +257,7 @@ router.post('/updateuser', auth, (req, res, next) => {
 			console.log("Error saving user:", err);
 		});
 
-		// Send them back to the login prompt
-		if(req.isAuthenticated()) {
-			req.flash("success", "Password changed.");
-		} else {
-			req.flash("success", "Password changed.  You can now log in.");
-		}
-		res.redirect("/login");
+		res.redirect("/api/v1/userinfo");
 	})
 	.catch(err => {
 		console.log("Error:", err);

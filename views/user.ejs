@@ -7,6 +7,7 @@
 			<% if (success.length) { %>
 				<%= success %>
 			<% } %>
+			<br>
 			<% if (errors.length) { %>
 				<%= errors %>
 			<% } %><br>
@@ -26,6 +27,7 @@
 				<input type="password" name="newpass" id="newpass"><br><br>
 
 				<input type="submit" name="submit" value="Submit">
+				<a href="/api/v1/deleteuser">Delete User</a>
 			</div>
 		</form>
 	</div>
