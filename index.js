@@ -106,6 +106,18 @@ app.get('/about', (req, res) => {
 	res.render('about');
 });
 
+const populateUserInfo = ((req, res, next) => {
+	if(typeof(req.user) != 'undefined' && req.user.email != "") {
+		res.locals.name = req.user.name;
+		res.locals.email = req.user.email;
+	} else {
+		res.locals.name = "None";
+		res.locals.email = "Unknown";
+	}
+	next();
+});
+
+
 app.get('/user', (req, res) => {
 	res.render('user');
 });
