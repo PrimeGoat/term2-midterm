@@ -106,8 +106,8 @@ app.get('/about', (req, res) => {
 	res.render('about');
 });
 
-app.get('/about', (req, res) => {
-	res.render('about');
+app.get('/user', (req, res) => {
+	res.render('user');
 });
 
 app.get('/updatepassword', (req, res) => {

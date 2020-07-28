@@ -105,20 +105,20 @@ router.get('/passcheck', (req, res, next) => {
 		req.flash('errors', 'Invalid email or password');
 		return res.redirect('/login');
 	}*/
-	let result;
-	console.log("User logged in, checking password check.  WHEE");
+	console.log("User logged in, checking password mustChange");
+	if(req.user == undefined || req.user == "") {
+		console.log("User login invalid");
+		return;
+	}
 	User.findOne({ email: req.user.email })
 	.then(user => {
 		console.log("User found", user);
 		if(user && user.mustChange) {
 			console.log(user.email + " Still needs to change their initial password.");
-			//req.flash('errors', 'You tried to log in but you must change your password first.');
-			//return res.redirect('/bot');
-			console.log("UPDATE PASS!");
-			result = "pass";
+			// Log the user out.  They can't log in until they update their password.
+			req.logout();
 			return res.redirect('/updatepassword');
 		} else {
-			result = "bot";
 			console.log("BOT!!");
 			return res.redirect('/bot');
 		}
@@ -126,9 +126,6 @@ router.get('/passcheck', (req, res, next) => {
 	.catch(err => {
 		console.log("Error:", err);
 	});
-
-	console.log("FALLBACK: BOT", result);
-	//return res.redirect('/bot');
 });
 
 router.post('/login', loginCheck, /*loginValidate,*/ passport.authenticate('local-login', {
@@ -137,8 +134,55 @@ router.post('/login', loginCheck, /*loginValidate,*/ passport.authenticate('loca
 	failureFlash: true
 }));
 
-router.put('/updatepassword', (req, res, next) => {
-    return res.render('updatepassword');
+// Forms don't let me use PUT.  Had to change it to POST
+router.post('/updatepassword', (req, res, next) => {
+	console.log("Updating password..");
+	console.log("Form's email:", req.body.email);
+	console.log("Form's old password:", req.body.currentpass);
+	console.log("Form's new password:", req.body.newpass);
+
+	User.findOne({ email: req.body.email })
+	.then(user => {
+		console.log("User found", user);
+
+		// Check if current password is correct
+		if(!bcrypt.compareSync(req.body.currentpass, user.password)) {
+			console.log("Incorrect password supplied.");
+			req.flash("errors", "Invalid email or password.");
+			return res.redirect("/updatepassword");
+		}
+
+		// Check if new password is valid
+		if(req.body.newpass.length < 3) {
+			console.log("New password too short.");
+			req.flash("errors", "Your password is too short.");
+			return res.redirect("/updatepassword");
+		}
+
+		// Now we update the password
+		user.password = bcrypt.hashSync(req.body.newpass, bcrypt.genSaltSync(10));
+		user.mustChange = false;
+
+		user.save()
+		.then(user => {
+			console.log("Saved user:", user);
+		})
+		.catch(err => {
+			console.log("Error saving user:", err);
+		});
+
+		// Send them back to the login prompt
+		if(req.isAuthenticated()) {
+			req.flash("success", "Password changed.");
+		} else {
+			req.flash("success", "Password changed.  You can now log in.");
+		}
+		res.redirect("/login");
+	})
+	.catch(err => {
+		console.log("Error:", err);
+		return;
+	});
 });
 
 module.exports = router;
