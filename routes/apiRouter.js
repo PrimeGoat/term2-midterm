@@ -69,8 +69,8 @@ router.post('/register', (req, res) => {
 							"Name": newUser.name
 						}],
 						"Subject": "Your temporary password",
-						"TextPart": "Welcome to Nova Chatbot.  Please log in with your temporary password and then update it to something more secure!  Your password is: " + password + "\nChange your password here: http://denis-midterm.herokuapp.com/changepassword",
-						"HTMLPart": "Welcome to Nova Chatbot.  Please log in with your temporary password and then update it to something more secure!  Your password is: <b>" + password + "</b><br>Change your password here: <a href=http://denis-midterm.herokuapp.com/changepassword>http://denis-midterm.herokuapp.com/changepassword</a>"
+						"TextPart": "Welcome to Nova Chatbot.  Please log in with your temporary password and then update it to something more secure!  Your password is: " + password + "\nChange your password here: http://denis-midterm.herokuapp.com/updatepassword",
+						"HTMLPart": "Welcome to Nova Chatbot.  Please log in with your temporary password and then update it to something more secure!  Your password is: <b>" + password + "</b><br>Change your password here: <a href=http://denis-midterm.herokuapp.com/updatepassword>http://denis-midterm.herokuapp.com/updatepassword</a>"
 					}]
 				});
 				return res.redirect('/thankyou');
