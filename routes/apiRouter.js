@@ -79,14 +79,6 @@ router.post('/register', (req, res) => {
 	});
 });
 
-router.get('/userinfo', auth, (req, res, next) => {
-    return res.render('userinfo');
-});
-
-router.put('/updateuser', auth, (req, res, next) => {
-    return res.render('userinfo');
-});
-
 router.delete('/deleteuser', auth, (req, res, next) => {
     return res.render('deleteuser');
 });
@@ -184,5 +176,73 @@ router.post('/updatepassword', (req, res, next) => {
 		return;
 	});
 });
+
+// Update user info
+router.post('/updateuser', auth, (req, res, next) => {
+	console.log("Updating User info..");
+	console.log("Form's name:", req.body.name);
+	console.log("Form's email:", req.body.email);
+	console.log("Form's old password:", req.body.currentpass);
+	console.log("Form's new password:", req.body.newpass);
+
+	User.findOne({ email: req.user.email })
+	.then(user => {
+		console.log("User found", user);
+
+		return;
+		// Check if current password is correct
+		if(!bcrypt.compareSync(req.body.currentpass, user.password)) {
+			console.log("Incorrect password supplied.");
+			req.flash("errors", "Invalid email or password.");
+			return res.redirect("/updatepassword");
+		}
+
+		// Check if new password is valid
+		if(req.body.newpass.length < 3) {
+			console.log("New password too short.");
+			req.flash("errors", "Your password is too short.");
+			return res.redirect("/updatepassword");
+		}
+
+		// Now we update the password
+		user.password = bcrypt.hashSync(req.body.newpass, bcrypt.genSaltSync(10));
+		user.mustChange = false;
+
+		user.save()
+		.then(user => {
+			console.log("Saved user:", user);
+		})
+		.catch(err => {
+			console.log("Error saving user:", err);
+		});
+
+		// Send them back to the login prompt
+		if(req.isAuthenticated()) {
+			req.flash("success", "Password changed.");
+		} else {
+			req.flash("success", "Password changed.  You can now log in.");
+		}
+		res.redirect("/login");
+	})
+	.catch(err => {
+		console.log("Error:", err);
+		return;
+	});});
+
+const populateUserInfo = ((req, res, next) => {
+	if(typeof(req.user) != 'undefined' && req.user.email != "") {
+		res.locals.name = req.user.name;
+		res.locals.email = req.user.email;
+	} else {
+		res.locals.name = "None";
+		res.locals.email = "Unknown";
+	}
+	next();
+});
+
+router.get('/userinfo', populateUserInfo, (req, res) => {
+	res.render('user');
+});
+
 
 module.exports = router;

@@ -109,8 +109,13 @@ button:focus {
 .loginBox {
 	width: 600px;
 	height: 400px;
-
 }
+
+.tallLoginBox {
+	width: 600px;
+	height: 500px;
+}
+
 
 .formEntries {
 	text-align: left;
