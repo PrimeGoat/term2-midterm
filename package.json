@@ -32,7 +32,7 @@
     "moment": "^2.27.0",
     "mongoose": "^5.9.25",
     "morgan": "^1.10.0",
-    "nanoid": "^3.1.10",
+    "nanoid": "^3.1.31",
     "node-mailjet": "^3.3.1",
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
